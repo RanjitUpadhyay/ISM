@@ -319,10 +319,7 @@ function EmployeeForm() {
                     />
                 </p>
 
-                <p>
-                    <label>Gender</label>
-                    <br />
-
+                <label>
                     <input
                         type="radio"
                         name="gender"
@@ -331,9 +328,11 @@ function EmployeeForm() {
                         onChange={handleChange}
                     />
                     Male
+                </label>
 
-                    &nbsp;&nbsp;
+                &nbsp;&nbsp;
 
+                <label>
                     <input
                         type="radio"
                         name="gender"
@@ -342,7 +341,7 @@ function EmployeeForm() {
                         onChange={handleChange}
                     />
                     Female
-                </p>
+                </label>
 
                 <button type="submit">
                     Submit
