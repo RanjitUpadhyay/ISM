@@ -1,44 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
 
+
+// useState creates a state variable named employee to store form data.
+// setEmployee is the function used to update the state.
 function EmployeeForm() {
-  const [employee, setEmployee] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    city: "",
-    course: "",
-    gender: "",
-  });
-
-  const handleChange = (e) => {
-    setEmployee({
-      ...employee,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/employees",
-        {
-          first_name: employee.firstName,
-          last_name: employee.lastName,
-          email: employee.email,
-          phone: employee.phone,
-          city: employee.city,
-          course: employee.course,
-          gender: employee.gender,
-        }
-      );
-
-      alert(response.data.message);
-
-      setEmployee({
+    const [employee, setEmployee] = useState({
         firstName: "",
         lastName: "",
         email: "",
@@ -46,161 +13,211 @@ function EmployeeForm() {
         city: "",
         course: "",
         gender: "",
-      });
-    } catch (error) {
-      console.log(error);
-      alert("Something went wrong");
-    }
-  };
+    });
 
-  const inputStyle = {
-    width: "100%",
-    padding: "8px",
-    marginTop: "5px",
-    border: "1px solid #999",
-    borderRadius: "4px",
-    boxSizing: "border-box",
-    fontSize: "15px",
-  };
+    // Arrow function
+// Purpose: Updates the corresponding field in the employee state
+// whenever the user types in an input field or selects a value.
+// Copy all existing state values using the spread operator (...employee)
+// and update only the field that the user changed.
+    const handleChange = (e) => {    
+        setEmployee({                                                      
+            ...employee,
+            [e.target.name]: e.target.value,
+        });
+    };
+    
+    // Arrow function
+// Purpose:
+// 1. Runs when the form is submitted.
+// 2. Prevents the browser from refreshing the page.
+// 3. Sends the form data to the Laravel API using Axios.
+// 4. Handles success and error responses.
+    const handleSubmit = async (e) => {
+        e.preventDefault();                      // Prevents the browser's default form submission behavior (page refresh).
 
-  const buttonStyle = {
-    width: "100%",
-    padding: "10px",
-    backgroundColor: "#1976d2",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "bold",
-  };
+        try {
+            const response = await axios.post(          //Sends a POST request to the Laravel API and waits for the response.
+                "http://127.0.0.1:8000/api/employees",
+                {
+                    first_name: employee.firstName,  // Convert React camelCase field names to Laravel/database snake_case fields.
+                    last_name: employee.lastName,    //Mapping React state to Laravel fields
+                    email: employee.email,
+                    phone: employee.phone,
+                    city: employee.city,
+                    course: employee.course,
+                    gender: employee.gender,
+                }
+            );
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
-      }}
-    >
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          width: "350px",
-          backgroundColor: "white",
-          padding: "25px",
-          border: "1px solid #ccc",
-          borderRadius: "8px",
-        }}
-      >
-        <h2 style={{ textAlign: "center" }}>
-          Employee Registration Form
-        </h2>
+            alert(response.data.message);   // Display the success message returned by the Laravel API.
 
-        <div style={{ marginBottom: "15px" }}>
-          <label>First Name</label>
-          <input
-            type="text"
-            name="firstName"
-            value={employee.firstName}
-            onChange={handleChange}
-            style={inputStyle}
-          />
+            // Reset all form fields after successful submission.
+            setEmployee({
+                firstName: "",
+                lastName: "",
+                email: "",
+                phone: "",
+                city: "",
+                course: "",
+                gender: "",
+            });
+        } catch (error) {                       // Handle any errors that occur while sending the request to the API.
+            console.log(error);
+            alert("Something went wrong");
+        }
+    };
+      
+    // Common style object used by all input fields.
+    const inputStyle = {
+        width: "100%",
+        padding: "8px",
+        marginTop: "5px",
+        border: "1px solid #999",
+        borderRadius: "4px",
+        boxSizing: "border-box",
+        fontSize: "15px",
+    };
+
+    // Common style object used for the Submit button.
+    const buttonStyle = {
+        width: "100%",
+        padding: "10px",
+        backgroundColor: "#1976d2",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        fontSize: "16px",
+        fontWeight: "bold",
+    };
+
+    return (             // Render the Employee Registration Form.
+        <div
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "100vh",
+                backgroundColor: "#f5f5f5",
+            }}
+        >
+            <form
+                onSubmit={handleSubmit}
+                style={{
+                    width: "350px",
+                    backgroundColor: "white",
+                    padding: "25px",
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                }}
+            >
+                <h2 style={{ textAlign: "center" }}>
+                    Employee Registration Form
+                </h2>
+
+                <div style={{ marginBottom: "15px" }}>
+                    <label>First Name</label>
+                    <input
+                        type="text"
+                        name="firstName"
+                        value={employee.firstName}
+                        onChange={handleChange}
+                        style={inputStyle}
+                    />
+                </div>
+
+                <div style={{ marginBottom: "15px" }}>
+                    <label>Last Name</label>
+                    <input
+                        type="text"
+                        name="lastName"
+                        value={employee.lastName}
+                        onChange={handleChange}
+                        style={inputStyle}
+                    />
+                </div>
+
+                <div style={{ marginBottom: "15px" }}>
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={employee.email}
+                        onChange={handleChange}
+                        style={inputStyle}
+                    />
+                </div>
+
+                <div style={{ marginBottom: "15px" }}>
+                    <label>Phone</label>
+                    <input
+                        type="text"
+                        name="phone"
+                        value={employee.phone}
+                        onChange={handleChange}
+                        style={inputStyle}
+                    />
+                </div>
+
+                <div style={{ marginBottom: "15px" }}>
+                    <label>City</label>
+                    <input
+                        type="text"
+                        name="city"
+                        value={employee.city}
+                        onChange={handleChange}
+                        style={inputStyle}
+                    />
+                </div>
+
+                <div style={{ marginBottom: "15px" }}>
+                    <label>Course</label>
+                    <input
+                        type="text"
+                        name="course"
+                        value={employee.course}
+                        onChange={handleChange}
+                        style={inputStyle}
+                    />
+                </div>
+
+                <div style={{ marginBottom: "20px" }}>
+                    <label>Gender</label>
+
+                    <div style={{ marginTop: "8px" }}>
+                        <label>
+                            <input
+                                type="radio"
+                                name="gender"
+                                value="Male"
+                                checked={employee.gender === "Male"}
+                                onChange={handleChange}
+                            />
+                            {" "}Male
+                        </label>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="gender"
+                                value="Female"
+                                checked={employee.gender === "Female"}
+                                onChange={handleChange}
+                            />
+                            {" "}Female
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" style={buttonStyle}>
+                    Submit
+                </button>
+            </form>
         </div>
-
-        <div style={{ marginBottom: "15px" }}>
-          <label>Last Name</label>
-          <input
-            type="text"
-            name="lastName"
-            value={employee.lastName}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ marginBottom: "15px" }}>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={employee.email}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ marginBottom: "15px" }}>
-          <label>Phone</label>
-          <input
-            type="text"
-            name="phone"
-            value={employee.phone}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ marginBottom: "15px" }}>
-          <label>City</label>
-          <input
-            type="text"
-            name="city"
-            value={employee.city}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ marginBottom: "15px" }}>
-          <label>Course</label>
-          <input
-            type="text"
-            name="course"
-            value={employee.course}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ marginBottom: "20px" }}>
-          <label>Gender</label>
-
-          <div style={{ marginTop: "8px" }}>
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="Male"
-                checked={employee.gender === "Male"}
-                onChange={handleChange}
-              />
-              {" "}Male
-            </label>
-
-            &nbsp;&nbsp;&nbsp;&nbsp;
-
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="Female"
-                checked={employee.gender === "Female"}
-                onChange={handleChange}
-              />
-              {" "}Female
-            </label>
-          </div>
-        </div>
-
-        <button type="submit" style={buttonStyle}>
-          Submit
-        </button>
-      </form>
-    </div>
-  );
+    );
 }
 
 export default EmployeeForm;
