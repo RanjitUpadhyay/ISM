@@ -1,0 +1,167 @@
+import { useState } from "react";
+import axios from "axios";
+
+function EmployeeForm() {
+    const [employee, setEmployee] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        city: "",
+        course: "",
+        gender: "",
+    });
+
+    const handleChange = (e) => {
+        setEmployee({
+            ...employee,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:8000/api/employees",
+                {
+                    first_name: employee.firstName,
+                    last_name: employee.lastName,
+                    email: employee.email,
+                    phone: employee.phone,
+                    city: employee.city,
+                    course: employee.course,
+                    gender: employee.gender,
+                }
+            );
+
+            alert(response.data.message);
+
+            setEmployee({
+                firstName: "",
+                lastName: "",
+                email: "",
+                phone: "",
+                city: "",
+                course: "",
+                gender: "",
+            });
+        } catch (error) {
+            console.log(error);
+            alert("Something went wrong");
+        }
+    };
+
+    return (
+        <div
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+            }}
+        >
+            <form onSubmit={handleSubmit}>
+                <h2>Employee Registration Form</h2>
+
+                <p>
+                    <label>First Name</label>
+                    <br />
+                    <input
+                        type="text"
+                        name="firstName"
+                        value={employee.firstName}
+                        onChange={handleChange}
+                    />
+                </p>
+
+                <p>
+                    <label>Last Name</label>
+                    <br />
+                    <input
+                        type="text"
+                        name="lastName"
+                        value={employee.lastName}
+                        onChange={handleChange}
+                    />
+                </p>
+
+                <p>
+                    <label>Email</label>
+                    <br />
+                    <input
+                        type="email"
+                        name="email"
+                        value={employee.email}
+                        onChange={handleChange}
+                    />
+                </p>
+
+                <p>
+                    <label>Phone</label>
+                    <br />
+                    <input
+                        type="text"
+                        name="phone"
+                        value={employee.phone}
+                        onChange={handleChange}
+                    />
+                </p>
+
+                <p>
+                    <label>City</label>
+                    <br />
+                    <input
+                        type="text"
+                        name="city"
+                        value={employee.city}
+                        onChange={handleChange}
+                    />
+                </p>
+
+                <p>
+                    <label>Course</label>
+                    <br />
+                    <input
+                        type="text"
+                        name="course"
+                        value={employee.course}
+                        onChange={handleChange}
+                    />
+                </p>
+
+                <p>
+                    <label>Gender</label>
+                    <br />
+
+                    <input
+                        type="radio"
+                        name="gender"
+                        value="Male"
+                        checked={employee.gender === "Male"}
+                        onChange={handleChange}
+                    />
+                    Male
+
+                    &nbsp;&nbsp;
+
+                    <input
+                        type="radio"
+                        name="gender"
+                        value="Female"
+                        checked={employee.gender === "Female"}
+                        onChange={handleChange}
+                    />
+                    Female
+                </p>
+
+                <button type="submit">
+                    Submit
+                </button>
+            </form>
+        </div>
+    );
+}
+
+export default EmployeeForm;
