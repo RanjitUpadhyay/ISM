@@ -1,0 +1,240 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+function StaffForm() {
+
+    const [staff, setStaff] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        city: "",
+        gender: "",
+    });
+
+    const [staffs, setStaffs] = useState([]);//empty 
+
+    const [editId, setEditId] = useState(null);
+
+    //React automatically loads(renders) the data when the page first appears.
+    useEffect(() => {
+        getStaffs();
+    }, []);  //[] means page renders one time only
+
+    const handleChange = (e) => {
+        setStaff({
+            ...staff,
+            [e.target.name]: e.target.value,
+        });
+    };
+      
+    // Retrieve all staff data from the Laravel API
+    const getStaffs = async () => {
+        const response = await axios.get("http://127.0.0.1:8000/api/staff");//passing only url as the parameter in axios get method
+        setStaffs(response.data);
+    };
+
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        if (editId === null) {      //No record is being edited.
+         //passing two paramerters in axios post method-> url and data(staff)
+            await axios.post("http://127.0.0.1:8000/api/staff", staff);   //the staff passed to axios.post() is the same staff state created by const [staff, setStaff] = useState(...)(line 6).
+                                                                    // It contains the latest values entered by the user in the form
+            alert("Staff Added Successfully");
+
+        } else {
+                  //Update staff data from the Laravel API
+            await axios.put(                                 //url is written under Backticks(``) allow you to insert variables using:${variable}
+                `http://127.0.0.1:8000/api/staff/${editId}`, 
+                staff
+            );
+
+            alert("Staff Updated Successfully");
+
+            setEditId(null);
+        }
+            
+       // This resets the staff state.
+        setStaff({
+            name: "",
+            email: "",
+            phone: "",
+            city: "",
+            gender: "",
+        });
+                       //getStaffs(); calls the API again, retrieves the latest staff records, updates the staffs state using setStaffs(), 
+        getStaffs();   //and React automatically updates (re-renders) the table. It does not reload the browser page.
+    };
+
+    const editStaff = async (id) => {
+
+        const response = await axios.get(                //Retrieve single staff data from the Laravel API
+            `http://127.0.0.1:8000/api/staff/${id}`    //url is written under Backticks(``) allow you to insert variables using:${variable}
+        );
+
+        setStaff(response.data);//Stores the selected staff record in the staff state, causing all form fields to be automatically filled with that record's data.
+
+        setEditId(id);//Stores the ID of the record being edited, tells React that the form is now in Edit
+    };
+     
+    //In your deleteStaff() function, return means "Exit the function immediately because the user chose not to delete the staff record."
+    const deleteStaff = async (id) => {
+                                                      //window refers to the browser window.
+        if (!window.confirm("Delete this staff?")) //Shows an OK/Cancel dialog and returns true if the user clicks OK, or false if they click Cancel.  
+            return;            //"Stop the deleteStaff() function immediately and do not execute the remaining code."                    
+    //Since the function stops, these lines are never executed:❌ No DELETE request is sent.❌ No record is deleted.❌ getStaffs() is not called.
+        await axios.delete(         //Delete staff data from the Laravel API
+            `http://127.0.0.1:8000/api/staff/${id}`//Laravel receives the request. Laravel deletes record ${id} from MySQL.
+        );
+
+        getStaffs();  //Calls the Laravel API again, gets the latest staff records after deletion, 
+    };                //stores them in the staffs state, and React automatically refreshes the table without reloading the page.
+
+    return (
+
+        <div style={{ width: "600px", margin: "30px auto" }}>
+
+            <h2>Staff CRUD</h2>
+
+            <form onSubmit={handleSubmit}>
+
+                <p>
+                    <input
+                        type="text"
+                        name="name"    
+                        placeholder="Name"
+                        value={staff.name}  //staff.name is taken from const [staff, setStaff] = useState({name: "",
+                        onChange={handleChange}
+                    />
+                </p>
+
+                <p>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={staff.email} //staff.email is taken from const [staff, setStaff] = useState({email: "",
+                        onChange={handleChange}
+                    />
+                </p>
+
+                <p>
+                    <input
+                        type="text"
+                        name="phone"
+                        placeholder="Phone"
+                        value={staff.phone}  //staff.phone is taken from const [staff, setStaff] = useState({phone: "",  
+                        onChange={handleChange}
+                    />
+                </p>
+
+                <p>
+                    <select
+                        name="city"
+                        value={staff.city}  //staff.city is taken from const [staff, setStaff] = useState({city: "",
+                        onChange={handleChange}
+                    >
+                        <option value="">Select City</option> 
+                        <option>Delhi</option>
+                        <option>Mumbai</option>
+                        <option>Kolkata</option>
+                        <option>Chennai</option>
+                    </select>
+                </p>
+
+                <p>
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="gender"
+                            value="Male"
+                            checked={staff.gender === "Male"}
+                            onChange={handleChange}
+                        />
+
+                        Male
+
+                    </label>
+
+                    &nbsp;&nbsp;
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="gender"
+                            value="Female"
+                            checked={staff.gender === "Female"}
+                            onChange={handleChange}
+                        />
+
+                        Female
+
+                    </label>
+
+                </p>
+
+                <button type="submit"> {editId === null ? "Save" : "Update"} </button>
+
+            </form>
+
+            <hr />  
+
+            <table border="1" cellPadding="8">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>   
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>City</th>
+                        <th>Gender</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                                                  
+                    {staffs.map((item) => (      //const [staffs, setStaffs] = useState([]); map() goes through every element of an array one by one.
+
+                        <tr key={item.id}>
+
+                            <td>{item.id}</td>
+                            <td>{item.name}</td>
+                            <td>{item.email}</td>
+                            <td>{item.phone}</td>
+                            <td>{item.city}</td>
+                            <td>{item.gender}</td>
+
+                            <td>
+
+                                <button onClick={() => editStaff(item.id)}> Edit </button>
+
+                                &nbsp;
+
+                                <button onClick={() => deleteStaff(item.id)}> Delete </button>
+
+                            </td>
+
+                        </tr>
+
+                    ))}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    );
+}
+
+export default StaffForm;
