@@ -12,7 +12,7 @@ class EmployeeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;  // earlier here :return present; 
+        return true;                                         // earlier here :return false was present; 
     }
 
     /**
@@ -22,7 +22,8 @@ class EmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return [                                                      //write here validation rules
+        //DB table column names
         'first_name'=>'required|max:100',
         'last_name'=>'required|max:100',
         'email'=>'required|email|unique:employees,email',
