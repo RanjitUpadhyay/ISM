@@ -9,7 +9,9 @@ class HouseController extends Controller
 {
     function index()
     {
-        $houses=House::all();
+        $houses=House::all();  //Use it when you simply want every record
+
+        // or  $houses = House::get();    get() is usually used after building a query.(Laravel Notes)
         return response()->json($houses);
     }
 

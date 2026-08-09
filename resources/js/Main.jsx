@@ -9,15 +9,20 @@
 //import HouseForm from "./components/HouseForm";
 //import ShopForm from "./components/ShopForm";
 //import ApplicantForm from "./components/ApplicantForm";
+//import PatientForm from "./components/PatientForm";
+//import RestaurantForm from "./components/RestaurantForm";
+//import HotelForm from "./components/HotelForm";
+//import RestBooking from "./components/RestBooking";
 
-import PatientForm from "./components/PatientForm";
+import LodgeBooking from "./components/LodgeForm";
 
 
 function Main(){
     return (
         <div>
         <h1>React in Laravel</h1>    
-    <PatientForm/>
+    <LodgeBooking/>
+
         </div>
     );
 }

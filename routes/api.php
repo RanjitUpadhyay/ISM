@@ -15,6 +15,10 @@ use App\http\Controllers\HouseController;
 use App\http\Controllers\ShopController;
 use App\http\Controllers\ApplicantController;
 use App\http\Controllers\PatientController;
+use App\Http\Controllers\ResataurantController;
+use App\Http\Controllers\HotelBookingController;
+use App\Http\Controllers\RestController;
+use App\Http\Controllers\LodgeController;
 
 
 
@@ -110,3 +114,36 @@ Route::post('/patient',[PatientController::class,'store']);
 Route::get('/patient/{id}',[PatientController::class,'show']);
 Route::put('/patient/{id}',[PatientController::class,'update']);
 Route::delete('/patient/{id}',[PatientController::class,'destroy']);
+
+//Restaurant
+Route::get('/restaurant',[ResataurantController::class,'index']);
+Route::post('/restaurant',[ResataurantController::class,'store']);
+Route::get('/restaurant/{id}',[ResataurantController::class,'show']);
+Route::put('/restaurant/{id}',[ResataurantController::class,'update']);
+Route::delete('/restaurant/{id}',[ResataurantController::class,'destroy']);
+
+//Hotel
+Route::get('/hotel-bookings', [HotelBookingController::class, 'index']);
+
+Route::post('/hotel-bookings', [HotelBookingController::class, 'store']);
+
+Route::get('/hotel-bookings/{id}', [HotelBookingController::class, 'show']);
+
+Route::put('/hotel-bookings/{id}', [HotelBookingController::class, 'update']);
+
+Route::delete('/hotel-bookings/{id}', [HotelBookingController::class, 'destroy']);
+
+//RestController-two tables
+Route::get('/restbooking',[RestController::class,'index']);
+Route::post('/restbooking',[RestController::class,'store']);
+Route::get('/restbooking/{booking_id}',[RestController::class,'show']);
+Route::put('/restbooking/{booking_id}',[RestController::class,'update']);
+Route::delete('/restbooking/{booking_id}',[RestController::class,'destroy']);
+
+//Lodge
+
+Route::get('/lodgebooking',[LodgeController::class,'index']);
+Route::post('/lodgebooking',[LodgeController::class,'store']);
+Route::get('/lodgebooking/{booking_id}',[LodgeController::class,'show']);
+Route::put('/lodgebooking/{booking_id}',[LodgeController::class,'update']);
+Route::delete('/lodgebooking/{booking_id}',[LodgeController::class,'destroy']);
